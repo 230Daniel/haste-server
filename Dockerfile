@@ -1,13 +1,10 @@
 FROM node:16-stretch
 
-RUN mkdir -p /usr/src/app && \
-    chown node:node /usr/src/app
-
-USER node:node
+RUN mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app
 
-COPY --chown=node:node . .
+COPY . .
 
 RUN npm install && \
     npm install redis@0.8.1 && \
@@ -61,8 +58,8 @@ ENTRYPOINT [ "bash", "docker-entrypoint.sh" ]
 HEALTHCHECK --interval=30s --timeout=30s --start-period=5s \
     --retries=3 CMD [ "sh", "-c", "echo -n 'curl localhost:7777... '; \
     (\
-        curl -sf localhost:7777 > /dev/null\
+    curl -sf localhost:7777 > /dev/null\
     ) && echo OK || (\
-        echo Fail && exit 2\
+    echo Fail && exit 2\
     )"]
 CMD ["npm", "start"]
